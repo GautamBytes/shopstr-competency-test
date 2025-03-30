@@ -1,6 +1,3 @@
-Below is an updated streamlined README in Markdown format, now including the resource links:
-
-```markdown
 # Shopstr Competency Test
 
 A decentralized Nostr marketplace for anonymous trading with Bitcoin. This project demonstrates gift-wrapped Nostr messages, P2PK-locked Cashu tokens, and HODL invoices in a playful UI with dark mode support.
@@ -98,5 +95,4 @@ shopstr-competency-test/
 ## Notes
 
 This project is designed as a competency test assignment and is not intended for production use.
-```
 
