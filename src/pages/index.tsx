@@ -355,7 +355,7 @@ const Home: NextPage = () => {
           </p>
           <div className={styles.footerLinks}>
             <a
-              href="https://github.com/your-username/your-repo"
+              href="https://github.com/GautamBytes"
               target="_blank"
               rel="noopener noreferrer"
               className={styles.iconLink}
@@ -387,7 +387,7 @@ const Home: NextPage = () => {
             </a>
 
             <a
-              href="https://your-portfolio-link.com"
+              href="https://gautam-portfolio-sigma.vercel.app/"
               target="_blank"
               rel="noopener noreferrer"
               className={styles.iconLink}
