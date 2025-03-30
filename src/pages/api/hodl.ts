@@ -1,4 +1,3 @@
-// /pages/api/hodl.ts
 import type { NextApiRequest, NextApiResponse } from 'next';
 import crypto from 'node:crypto';
 import {
