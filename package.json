@@ -9,17 +9,22 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@cashu/cashu-ts": "^2.4.1",
+    "ln-service": "^57.24.0",
+    "next": "15.2.4",
+    "noble-secp256k1": "^1.2.14",
+    "nostr-tools": "^2.11.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "next": "15.2.4"
+    "react-syntax-highlighter": "^15.6.1"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@eslint/eslintrc": "^3",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.2.4",
-    "@eslint/eslintrc": "^3"
+    "typescript": "^5"
   }
 }
