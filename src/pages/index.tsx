@@ -7,7 +7,7 @@ import Head from 'next/head';
 import Image from 'next/image';
 import styles from '../styles/Home.module.css';
 
-// Syntax highlighting (if you still want it)
+// Syntax highlighting
 import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { docco } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
 
@@ -100,11 +100,14 @@ const Home: NextPage = () => {
     <div className={`${styles.wrapper} ${darkMode ? styles.darkMode : ''}`}>
       <Head>
         <title>Shopstr Competency Test</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" /> 
         <meta
           name="description"
           content="Testing implementation of Nostr, Cashu, and HODL invoices"
         />
         <link rel="icon" href="/favicon.ico" />
+        {/* Add viewport meta tag for responsiveness */}
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
       </Head>
 
       {/* Dark mode toggle button */}
@@ -114,7 +117,7 @@ const Home: NextPage = () => {
         </button>
       </div>
 
-      {/* Floating shapes container */}
+      {/* Floating shapes container - hide on small screens */}
       <div className={styles.floatingShapes}>
         <div
           className={styles.shape}
@@ -205,7 +208,7 @@ const Home: NextPage = () => {
           <div className={styles.heroText}>
             <h1 className={styles.heroTitle}>Welcome to Shopstr!</h1>
             <p className={styles.heroSubtitle}>
-            Trade anonymously with Bitcoin via secure, automated escrow.
+              Trade anonymously with Bitcoin via secure, automated escrow.
             </p>
           </div>
 
@@ -215,7 +218,11 @@ const Home: NextPage = () => {
               alt="Cartoon illustration"
               width={480}
               height={360}
-              style={{ objectFit: 'contain' }}
+              style={{ 
+                objectFit: 'contain',
+                maxWidth: '100%',
+                height: 'auto'
+              }}
               priority
             />
           </div>
@@ -235,7 +242,7 @@ const Home: NextPage = () => {
         <main className={styles.main}>
           {/* 1. Nostr */}
           <section className={styles.card}>
-            <h2>1. Nostr Gift-Wrapped Messages </h2>
+            <h2>1. Nostr Gift-Wrapped Messages</h2>
             <button
               onClick={toggleNostr}
               disabled={nostrLoading}
@@ -319,7 +326,7 @@ const Home: NextPage = () => {
             {hodlResult && hodlVisible && (
               <div className={`${styles.resultsContainer} ${styles.fadeIn}`}>
                 <h3>Invoice Statuses</h3>
-                <ul>
+                <ul className={styles.statusList}>
                   <li>Original: {hodlResult.originalInvoice.status}</li>
                   <li>After Payment: {hodlResult.heldInvoice.status}</li>
                   <li>After Settlement: {hodlResult.settledInvoice.status}</li>
@@ -343,12 +350,12 @@ const Home: NextPage = () => {
 
         {/* Footer */}
         <footer className={styles.footer}>
-          <p>
+          <p className={styles.footerText}>
             © 2025 Gautam Manchandani | Built for the Shopstr Competency Test[SOB'25]
           </p>
           <div className={styles.footerLinks}>
             <a
-              href="https://github.com/GautamBytes"
+              href="https://github.com/your-username/your-repo"
               target="_blank"
               rel="noopener noreferrer"
               className={styles.iconLink}
@@ -380,7 +387,7 @@ const Home: NextPage = () => {
             </a>
 
             <a
-              href="https://gautam-portfolio-sigma.vercel.app/"
+              href="https://your-portfolio-link.com"
               target="_blank"
               rel="noopener noreferrer"
               className={styles.iconLink}
@@ -410,13 +417,3 @@ const Home: NextPage = () => {
 };
 
 export default Home;
-
-
-
-
-
-
-
-
-
-
