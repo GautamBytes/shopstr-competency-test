@@ -1,4 +1,3 @@
-// /lib/lightningService.ts
 import crypto from 'node:crypto';
 
 export interface HODLInvoice {
