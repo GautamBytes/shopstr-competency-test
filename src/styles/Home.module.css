@@ -364,10 +364,9 @@
   color: #f1c40f;
 }
 
-/* Updated Dark Mode Card Styles */
 .darkMode .card {
-  background: #3a4a5a;         /* Deep blue-gray */
-  border-color: #536272;       /* Slightly lighter border */
+  background: #3a4a5a;
+  border-color: #536272;
   box-shadow: 0 2px 8px rgba(0,0,0,0.35);
   color: #ddd;
 }
@@ -393,56 +392,128 @@
   color: #ecf0f1;
 }
 
-/* Responsive adjustments */
+/* Mobile Responsive Styles */
 @media (max-width: 768px) {
   .hamburgerBtn {
     font-size: 1.2rem;
+    padding: 0.8rem 1.4rem;
   }
+
+  .darkModeBtn {
+    padding: 0.8rem 1.2rem;
+  }
+
   .sidebar {
-    width: 160px;
-    transform: translateX(-160px);
+    width: 75%;
+    transform: translateX(-100%);
+    padding: 5rem 1rem 1.5rem;
   }
+
   .sidebarOpen {
     transform: translateX(0);
   }
+
+  .sidebarLinks a {
+    font-size: 1rem;
+    padding: 0.5rem 0;
+  }
+
   .hero {
     flex-direction: column;
+    padding: 2rem 1rem 1rem;
     text-align: center;
-    padding: 2rem 1rem;
   }
-  .heroText {
-    padding-right: 0;
-    margin-bottom: 1.5rem;
-  }
+
   .heroTitle {
-    font-size: 2.2rem;
+    font-size: 2rem;
+    line-height: 1.2;
   }
+
   .heroSubtitle {
-    font-size: 1.1rem;
+    font-size: 1rem;
+    padding: 0 0.5rem;
   }
+
   .heroImage {
-    margin-bottom: 1rem;
-    width: 100%;
-  }
-  .heroImage img {
     max-width: 100%;
+    margin-top: 1rem;
   }
-  .waveWrapper {
-    height: 60px;
-    margin-top: -60px;
-  }
+
   .main {
     padding: 1rem;
+    width: 100%;
+  }
+
+  .card {
+    padding: 1.2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .card h2 {
+    font-size: 1.1rem;
+    line-height: 1.4;
+  }
+
+  .button {
+    width: 100%;
+    padding: 0.8rem;
+    font-size: 0.95rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .resultsContainer {
+    padding: 0.8rem;
+  }
+
+  .detailsPre {
+    font-size: 0.8rem;
+    max-height: 300px;
+  }
+
+  .footer {
+    padding: 1rem 0.5rem;
+    font-size: 0.8rem;
+  }
+
+  .footerLinks {
+    gap: 1.5rem;
+    margin-top: 1rem;
+  }
+
+  .waveWrapper {
+    height: 50px;
+    margin-top: -40px;
   }
 }
 
+@media (max-width: 768px) and (orientation: landscape) {
+  .hero {
+    padding: 1rem;
+  }
+  
+  .heroTitle {
+    font-size: 1.8rem;
+  }
+}
 
+@media (max-width: 480px) {
+  .heroTitle {
+    font-size: 1.8rem;
+  }
 
+  .heroSubtitle {
+    font-size: 0.95rem;
+  }
 
+  .card h2 {
+    font-size: 1rem;
+  }
 
+  .button {
+    font-size: 0.9rem;
+  }
 
-
-
-
-
-
+  .footer {
+    font-size: 0.75rem;
+  }
+}
