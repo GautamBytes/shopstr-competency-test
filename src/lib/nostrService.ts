@@ -1,4 +1,3 @@
-// src/lib/nostrService.ts
 import { getPublicKey, nip04, Event } from 'nostr-tools';
 import { randomBytes, createHash } from 'crypto';
 import * as secp from 'noble-secp256k1';
@@ -18,11 +17,14 @@ export interface NostrKeys {
 
 /**
  * Generate a new Nostr keypair.
+ * The newer version of nostr-tools expects Uint8Array for the private key.
  */
 export function generateNostrKeys(): NostrKeys {
-  const privateKey = generatePrivateKey();
-  const publicKey = getPublicKey(privateKey);
-  return { privateKey, publicKey };
+  const privateKeyHex = generatePrivateKey();
+  // Convert hex string to Uint8Array
+  const privateKeyBytes = Buffer.from(privateKeyHex, 'hex');
+  const publicKey = getPublicKey(privateKeyBytes);
+  return { privateKey: privateKeyHex, publicKey };
 }
 
 /**
@@ -53,8 +55,12 @@ async function finishEvent(event: Event, privateKey: string): Promise<Event> {
   const eventData = [0, event.pubkey, event.created_at, event.kind, event.tags, event.content];
   const serialized = JSON.stringify(eventData);
   const hash = createHash('sha256').update(serialized).digest('hex');
+  
+  // Convert hex string to Uint8Array for noble-secp256k1
+  const privateKeyBytes = Buffer.from(privateKey, 'hex');
   // Use noble-secp256k1 to sign the hash with the private key.
-  const sig = await secp.sign(hash, privateKey, { recovered: false });
+  const sig = await secp.sign(hash, privateKeyBytes, { recovered: false });
+  
   return {
     ...event,
     id: hash,
@@ -71,8 +77,11 @@ export async function sealMessage(
   senderPrivkey: string,
   receiverPubkey: string
 ): Promise<Event> {
+  // Convert hex string to Uint8Array for nip04
+  const senderPrivkeyBytes = Buffer.from(senderPrivkey, 'hex');
+  
   const encryptedContent = await nip04.encrypt(
-    senderPrivkey,
+    senderPrivkeyBytes,
     receiverPubkey,
     plainEvent.content
   );
@@ -95,15 +104,20 @@ export async function giftWrapMessage(
   wrappingPrivkey: string,
   receiverPubkey: string
 ): Promise<Event> {
+  // Convert hex string to Uint8Array for nip04
+  const wrappingPrivkeyBytes = Buffer.from(wrappingPrivkey, 'hex');
+  
   const giftContent = await nip04.encrypt(
-    wrappingPrivkey,
+    wrappingPrivkeyBytes,
     receiverPubkey,
     JSON.stringify(sealedEvent)
   );
 
+  const wrappingPubkey = getPublicKey(Buffer.from(wrappingPrivkey, 'hex'));
+  
   const giftWrappedEvent: Event = {
     kind: 1059,
-    pubkey: getPublicKey(wrappingPrivkey),
+    pubkey: wrappingPubkey,
     created_at: Math.floor(Date.now() / 1000),
     tags: [["p", receiverPubkey]],
     content: giftContent,
@@ -123,9 +137,12 @@ export async function unwrapGiftMessage(
   receiverPrivkey: string
 ): Promise<Event | null> {
   try {
+    // Convert hex string to Uint8Array for nip04
+    const receiverPrivkeyBytes = Buffer.from(receiverPrivkey, 'hex');
+    
     const senderPubkey = giftWrappedEvent.pubkey;
     const decryptedContent = await nip04.decrypt(
-      receiverPrivkey,
+      receiverPrivkeyBytes,
       senderPubkey,
       giftWrappedEvent.content
     );
@@ -145,9 +162,12 @@ export async function unsealMessage(
   receiverPrivkey: string
 ): Promise<string | null> {
   try {
+    // Convert hex string to Uint8Array for nip04
+    const receiverPrivkeyBytes = Buffer.from(receiverPrivkey, 'hex');
+    
     const senderPubkey = sealedEvent.pubkey;
     const decryptedContent = await nip04.decrypt(
-      receiverPrivkey,
+      receiverPrivkeyBytes,
       senderPubkey,
       sealedEvent.content
     );
@@ -157,7 +177,3 @@ export async function unsealMessage(
     return null;
   }
 }
-
-
-
-
