@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@cashu/cashu-ts": "^2.4.1",
+    "@noble/hashes": "^1.7.1",
+    "@noble/secp256k1": "^2.2.3",
     "ln-service": "^57.24.0",
     "next": "15.2.4",
     "noble-secp256k1": "^1.2.14",
