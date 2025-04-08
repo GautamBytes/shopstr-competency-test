@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { CashuMint, CashuWallet, getEncodedToken } from '@cashu/cashu-ts';
 import * as secp from '@noble/secp256k1';
 import { bytesToHex, randomBytes } from '@noble/hashes/utils';
