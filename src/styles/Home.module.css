@@ -1,5 +1,5 @@
 /* Define CSS variables for consistency */
-:root {
+:global(:root) {
   --primary: #f5576c;
   --primary-light: #ff6b7a;
   --secondary: #f093fb;
