@@ -37,10 +37,12 @@ shopstr-competency-test/
 │   │   │   ├── cashu.ts
 │   │   │   ├── hodl.ts
 │   │   │   └── nostr.ts
+|   |   |── _app.tsx
 │   │   ├── _document.tsx
 │   │   └── index.tsx
 │   └── styles/
 │       └── Home.module.css
+|       └── global.css
 ├── .gitignore
 ├── eslint.config.mjs
 ├── next.config.ts
