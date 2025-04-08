@@ -1,95 +1,66 @@
-import * as crypto from 'crypto';
+import { CashuMint, CashuWallet, getEncodedToken } from '@cashu/cashu-ts';
+import * as secp from '@noble/secp256k1';
+import { bytesToHex, randomBytes } from '@noble/hashes/utils';
 
-// Interface for our P2PK token
-export interface P2PKToken {
-  id: string;
-  amount: number;
-  pubkey: string; // public key that can spend this token
-  secret: string; // secret value that must be signed
-  mint: string;
-}
+const MINT_URL = 'https://testnut.cashu.space'; // Test mint URL
 
-// Interface for a signed token ready to be spent
-export interface SignedToken extends P2PKToken {
-  signature: string;
-}
-
-/**
- * Generate a keypair for P2PK operations
- */
-export function generateP2PKKeys() {
-  // Generate a key pair (using RSA for simplicity)
-  const { privateKey, publicKey } = crypto.generateKeyPairSync('rsa', {
-    modulusLength: 2048,
-    publicKeyEncoding: {
-      type: 'spki',
-      format: 'pem'
-    },
-    privateKeyEncoding: {
-      type: 'pkcs8',
-      format: 'pem'
-    }
-  });
-  
-  return { privateKey, publicKey };
-}
-
-/**
- * Mint a P2PK-locked Cashu token
- * In a real implementation, this would call the Cashu mint
- */
-export function mintP2PKToken(amount: number, pubkey: string): P2PKToken {
-  // Generate a token ID and secret
-  const id = crypto.randomBytes(16).toString('hex');
-  const secret = crypto.randomBytes(32).toString('hex');
-  
+// Generate a new secp256k1 key pair and return the keys as hexadecimal strings.
+export function generateCashuKeys() {
+  const privateKey = randomBytes(32);
+  const publicKey = secp.getPublicKey(privateKey);
   return {
-    id,
-    amount,
-    pubkey,
-    secret,
-    mint: 'https://example-mint.com'
+    privateKey: bytesToHex(privateKey),
+    publicKey: bytesToHex(publicKey),
   };
 }
 
-/**
- * Sign a token with the private key to prepare it for spending
- */
-export function signToken(token: P2PKToken, privateKey: string): SignedToken {
-  // Create a signer
-  const signer = crypto.createSign('SHA256');
-  
-  // Update with the token secret
-  signer.update(token.secret);
-  
-  // Sign it
-  const signature = signer.sign(privateKey, 'base64');
-  
-  return {
-    ...token,
-    signature
-  };
+// Helper to simulate P2PK locking by adding a 'p2pk' field to each proof.
+function lockProofs(proofs: any[], pubkey: string) {
+  return proofs.map((proof) => ({
+    ...proof,
+    p2pk: pubkey, // Indicates this proof is locked to the provided public key.
+  }));
 }
 
-/**
- * Verify a signed token to see if it can be spent
- */
-export function verifySignedToken(signedToken: SignedToken): boolean {
+// Issues a P2PK token by requesting a mint quote, minting proofs,
+// and then "locking" them using our helper.
+export async function createP2PkToken(amount: number, pubkey: string) {
   try {
-    // Create a verifier
-    const verifier = crypto.createVerify('SHA256');
+    const mint = new CashuMint(MINT_URL);
+    const wallet = new CashuWallet(mint);
+
+    // Request a mint quote using the updated method.
+    const mintQuote = await wallet.createMintQuote(amount);
+    const { quote } = mintQuote; // Extract the quote from the response.
     
-    // Update with the token secret
-    verifier.update(signedToken.secret);
+    // Mint proofs using the provided quote.
+    const proofs = await wallet.mintProofs(amount, quote);
     
-    // Verify the signature against the public key
-    return verifier.verify(
-      signedToken.pubkey, 
-      signedToken.signature, 
-      'base64'
-    );
+    // Lock the proofs with the given public key.
+    const lockedProofs = lockProofs(proofs, pubkey);
+
+    return {
+      proofs: lockedProofs,
+      token: getEncodedToken({ proofs: lockedProofs }),
+    };
   } catch (error) {
-    console.error("Failed to verify token:", error);
-    return false;
+    console.error('Cashu error during issuance:', error);
+    throw error;
+  }
+}
+
+// Claims a token by calling the wallet's receive method.
+// If the token is P2PK locked, providing the corresponding private key should "unlock" it.
+export async function claimP2PkToken(token: string, privkey: string) {
+  try {
+    const mint = new CashuMint(MINT_URL);
+    const wallet = new CashuWallet(mint);
+    
+    // Calling receive with the private key should validate/unlock the P2PK token.
+    const claimedProofs = await wallet.receive(token, { privkey });
+    return claimedProofs;
+  } catch (error) {
+    console.error('Cashu error during claim:', error);
+    throw error;
   }
 }
