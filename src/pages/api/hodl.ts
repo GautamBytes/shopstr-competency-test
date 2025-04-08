@@ -18,7 +18,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     // Generate a preimage and hash for the invoice
     const { preimage, hash } = generatePreimageAndHash();
     
-    // Create a HODL invoice
+    // Create a HODL invoice with a 24h expiry
     const invoice = createHodlInvoice(
       5000, // 5000 sats
       "Shopstr order #12345",
@@ -28,15 +28,36 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     // Simulate payment (funds are held)
     const heldInvoice = payHodlInvoice(invoice);
     
-    // Test settling with correct preimage
-    const settledInvoice = settleHodlInvoice(heldInvoice, preimage);
+    // --- Scenario 1: Normal Settlement ---
+    // Test settling with correct preimage if not expired
+    const currentTimestamp = Math.floor(Date.now() / 1000);
+    let settledInvoice;
+    if (heldInvoice.expiresAt < currentTimestamp) {
+      // Invoice has expired -> cancel instead of settling
+      settledInvoice = cancelHodlInvoice(heldInvoice);
+    } else {
+      settledInvoice = settleHodlInvoice(heldInvoice, preimage);
+    }
     
-    // Test settling with incorrect preimage
+    // --- Scenario 2: Failed Settlement ---
+    // Test settling with incorrect preimage (remains held)
     const wrongPreimage = crypto.randomBytes(32).toString('hex');
     const failedSettlement = settleHodlInvoice(heldInvoice, wrongPreimage);
     
+    // --- Scenario 3: Explicit Cancellation ---
     // Test cancellation
     const canceledInvoice = cancelHodlInvoice(heldInvoice);
+    
+    // --- Scenario 4: Dispute Simulation for an Expired Invoice ---
+    // Simulate an expired invoice by overriding expiresAt to a past time
+    const expiredHeldInvoice = { ...heldInvoice, expiresAt: currentTimestamp - 100 };
+    let disputedInvoice;
+    if (expiredHeldInvoice.expiresAt < currentTimestamp) {
+      // Since the invoice is expired, cancel it to simulate a dispute resolution
+      disputedInvoice = cancelHodlInvoice(expiredHeldInvoice);
+    } else {
+      disputedInvoice = settleHodlInvoice(expiredHeldInvoice, preimage);
+    }
     
     // Return the results as JSON
     res.status(200).json({
@@ -45,7 +66,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       heldInvoice,
       settledInvoice,
       failedSettlement,
-      canceledInvoice
+      canceledInvoice,
+      disputedInvoice
     });
   } catch (error) {
     console.error('Error in /api/hodl:', error);
