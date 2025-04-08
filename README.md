@@ -97,4 +97,3 @@ shopstr-competency-test/
 ## Notes
 
 This project is designed as a competency test assignment and is not intended for production use.
-
