@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable react/no-unescaped-entities */
-
 import { useState } from 'react';
 import type { NextPage } from 'next';
 import Head from 'next/head';
@@ -20,7 +17,7 @@ const Home: NextPage = () => {
   const [darkMode, setDarkMode] = useState(false);
   const toggleDarkMode = () => setDarkMode(!darkMode);
 
-  // 1. Nostr states
+  // Nostr states
   const [nostrResult, setNostrResult] = useState<any>(null);
   const [nostrLoading, setNostrLoading] = useState(false);
   const [nostrVisible, setNostrVisible] = useState(false);
@@ -45,7 +42,7 @@ const Home: NextPage = () => {
     setNostrLoading(false);
   };
 
-  // 2. Cashu states
+  // Cashu states
   const [cashuResult, setCashuResult] = useState<any>(null);
   const [cashuLoading, setCashuLoading] = useState(false);
   const [cashuVisible, setCashuVisible] = useState(false);
@@ -70,7 +67,7 @@ const Home: NextPage = () => {
     setCashuLoading(false);
   };
 
-  // 3. HODL states
+  // HODL states
   const [hodlResult, setHodlResult] = useState<any>(null);
   const [hodlLoading, setHodlLoading] = useState(false);
   const [hodlVisible, setHodlVisible] = useState(false);
@@ -96,23 +93,22 @@ const Home: NextPage = () => {
   };
 
   return (
-    // Use styles.darkMode when darkMode is true
     <div className={`${styles.wrapper} ${darkMode ? styles.darkMode : ''}`}>
       <Head>
         <title>Shopstr Competency Test</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" /> 
-        <meta
-          name="description"
-          content="Testing implementation of Nostr, Cashu, and HODL invoices"
-        />
+        <meta name="description" content="Testing implementation of Nostr, Cashu, and HODL invoices" />
         <link rel="icon" href="/favicon.ico" />
-        {/* Add viewport meta tag for responsiveness */}
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
       </Head>
 
       {/* Dark mode toggle button */}
       <div className={styles.darkModeToggle}>
-        <button onClick={toggleDarkMode} className={styles.darkModeBtn}>
+        <button 
+          onClick={toggleDarkMode} 
+          className={styles.darkModeBtn}
+          aria-label="Toggle Dark Mode"
+        >
           {darkMode ? '☀️' : '🌙'}
         </button>
       </div>
@@ -126,7 +122,7 @@ const Home: NextPage = () => {
             height: '80px',
             top: '120px',
             left: '15%',
-            background: 'linear-gradient(135deg, #f093fb, #f5576c)',
+            background: 'linear-gradient(135deg, var(--secondary), var(--primary))'
           }}
         />
         <div
@@ -136,7 +132,7 @@ const Home: NextPage = () => {
             height: '100px',
             top: '320px',
             left: '60%',
-            background: 'linear-gradient(135deg, #f093fb, #f5576c)',
+            background: 'linear-gradient(135deg, var(--secondary), var(--primary))'
           }}
         />
         <div
@@ -146,54 +142,57 @@ const Home: NextPage = () => {
             height: '60px',
             top: '500px',
             left: '80%',
-            background: 'linear-gradient(135deg, #f093fb, #f5576c)',
+            background: 'linear-gradient(135deg, var(--secondary), var(--primary))'
           }}
         />
       </div>
 
       {/* Hamburger / Toggle Button */}
       <div className={styles.navToggle}>
-        <button onClick={toggleSidebar} className={styles.hamburgerBtn}>
+        <button 
+          onClick={toggleSidebar} 
+          className={styles.hamburgerBtn}
+          aria-label="Toggle Sidebar Navigation"
+        >
           ☰
         </button>
       </div>
 
       {/* Overlay behind sidebar */}
       {sidebarOpen && (
-        <div className={styles.overlay} onClick={toggleSidebar}></div>
+        <div className={styles.overlay} onClick={toggleSidebar} role="button" aria-label="Close Sidebar"></div>
       )}
 
-      {/* Sidebar */}
-      <aside
-        className={`${styles.sidebar} ${
-          sidebarOpen ? styles.sidebarOpen : ''
-        }`}
-      >
+      {/* Sidebar Navigation */}
+      <aside className={`${styles.sidebar} ${sidebarOpen ? styles.sidebarOpen : ''}`} role="navigation">
         <h2 className={styles.sidebarTitle}>Resources</h2>
         <ul className={styles.sidebarLinks}>
           <li>
-            <a
-              href="https://github.com/nostr-protocol/nips/blob/master/17.md"
-              target="_blank"
+            <a 
+              href="https://github.com/nostr-protocol/nips/blob/master/17.md" 
+              target="_blank" 
               rel="noopener noreferrer"
+              aria-label="NIP-17 Docs"
             >
               <span className={styles.arrow}>➜</span> NIP-17 Docs
             </a>
           </li>
           <li>
-            <a
-              href="https://github.com/cashubtc/nuts/blob/main/11.md"
-              target="_blank"
+            <a 
+              href="https://github.com/cashubtc/nuts/blob/main/11.md" 
+              target="_blank" 
               rel="noopener noreferrer"
+              aria-label="Cashu P2PK"
             >
               <span className={styles.arrow}>➜</span> Cashu P2PK
             </a>
           </li>
           <li>
-            <a
-              href="https://github.com/lightningnetwork/lnd/pull/2022"
-              target="_blank"
+            <a 
+              href="https://github.com/lightningnetwork/lnd/pull/2022" 
+              target="_blank" 
               rel="noopener noreferrer"
+              aria-label="HODL Invoices"
             >
               <span className={styles.arrow}>➜</span> HODL Invoices
             </a>
@@ -201,9 +200,7 @@ const Home: NextPage = () => {
         </ul>
       </aside>
 
-      {/* Main content container */}
       <div className={styles.container}>
-        {/* Hero Section */}
         <header className={styles.hero}>
           <div className={styles.heroText}>
             <h1 className={styles.heroTitle}>Welcome to Shopstr!</h1>
@@ -211,41 +208,31 @@ const Home: NextPage = () => {
               Trade anonymously with Bitcoin via secure, automated escrow.
             </p>
           </div>
-
           <div className={styles.heroImage}>
             <Image
               src="/hero-cartoon.jpg"
-              alt="Cartoon illustration"
+              alt="Illustration of a shopping cart and secure payment"
               width={480}
               height={360}
-              style={{ 
-                objectFit: 'contain',
-                maxWidth: '100%',
-                height: 'auto'
-              }}
+              style={{ objectFit: 'contain', maxWidth: '100%', height: 'auto' }}
               priority
             />
           </div>
         </header>
 
-        {/* Decorative wave separator */}
         <div className={styles.waveWrapper}>
-          <svg
-            className={styles.wave}
-            viewBox="0 0 1440 150"
-            preserveAspectRatio="none"
-          >
+          <svg className={styles.wave} viewBox="0 0 1440 150" preserveAspectRatio="none">
             <path fill="#fff" d="M0,60 C360,180 1080,0 1440,60 L1440,0 L0,0 Z"></path>
           </svg>
         </div>
 
         <main className={styles.main}>
-          {/* 1. Nostr */}
+          {/* Nostr Section */}
           <section className={styles.card}>
             <h2>1. Nostr Gift-Wrapped Messages</h2>
-            <button
-              onClick={toggleNostr}
-              disabled={nostrLoading}
+            <button 
+              onClick={toggleNostr} 
+              disabled={nostrLoading} 
               className={styles.button}
             >
               {nostrLoading
@@ -263,11 +250,7 @@ const Home: NextPage = () => {
                 <p>{nostrResult.decryptedContent}</p>
                 <details>
                   <summary>Show Full Details</summary>
-                  <SyntaxHighlighter
-                    language="json"
-                    style={docco}
-                    className={styles.detailsPre}
-                  >
+                  <SyntaxHighlighter language="json" style={docco} className={styles.detailsPre}>
                     {JSON.stringify(nostrResult, null, 2)}
                   </SyntaxHighlighter>
                 </details>
@@ -275,12 +258,12 @@ const Home: NextPage = () => {
             )}
           </section>
 
-          {/* 2. Cashu */}
+          {/* Cashu Section */}
           <section className={styles.card}>
             <h2>2. P2PK-Locked Cashu Tokens</h2>
-            <button
-              onClick={toggleCashu}
-              disabled={cashuLoading}
+            <button 
+              onClick={toggleCashu} 
+              disabled={cashuLoading} 
               className={styles.button}
             >
               {cashuLoading
@@ -296,11 +279,7 @@ const Home: NextPage = () => {
                 <p>{cashuResult.message}</p>
                 <details>
                   <summary>Show Full Details</summary>
-                  <SyntaxHighlighter
-                    language="json"
-                    style={docco}
-                    className={styles.detailsPre}
-                  >
+                  <SyntaxHighlighter language="json" style={docco} className={styles.detailsPre}>
                     {JSON.stringify(cashuResult, null, 2)}
                   </SyntaxHighlighter>
                 </details>
@@ -308,12 +287,12 @@ const Home: NextPage = () => {
             )}
           </section>
 
-          {/* 3. HODL */}
+          {/* HODL Section */}
           <section className={styles.card}>
             <h2>3. HODL Invoice</h2>
-            <button
-              onClick={toggleHodl}
-              disabled={hodlLoading}
+            <button 
+              onClick={toggleHodl} 
+              disabled={hodlLoading} 
               className={styles.button}
             >
               {hodlLoading
@@ -335,11 +314,7 @@ const Home: NextPage = () => {
                 </ul>
                 <details>
                   <summary>Show Full Details</summary>
-                  <SyntaxHighlighter
-                    language="json"
-                    style={docco}
-                    className={styles.detailsPre}
-                  >
+                  <SyntaxHighlighter language="json" style={docco} className={styles.detailsPre}>
                     {JSON.stringify(hodlResult, null, 2)}
                   </SyntaxHighlighter>
                 </details>
@@ -348,27 +323,20 @@ const Home: NextPage = () => {
           </section>
         </main>
 
-        {/* Footer */}
         <footer className={styles.footer}>
           <p className={styles.footerText}>
             © 2025 Gautam Manchandani | Built for the Shopstr Competency Test[SOB'25]
           </p>
           <div className={styles.footerLinks}>
-            <a
-              href="https://github.com/GautamBytes"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.iconLink}
-              aria-label="GitHub"
+            <a 
+              href="https://github.com/GautamBytes/shopstr-competency-test" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className={styles.iconLink} 
+              aria-label="GitHub Repository"
             >
-              <svg
-                role="img"
-                viewBox="0 0 24 24"
-                width="24"
-                height="24"
-                fill="currentColor"
-                xmlns="http://www.w3.org/2000/svg"
-              >
+              {/* GitHub SVG icon */}
+              <svg role="img" viewBox="0 0 24 24" width="24" height="24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                 <title>GitHub Handle</title>
                 <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 
                   3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 
@@ -386,21 +354,15 @@ const Home: NextPage = () => {
               </svg>
             </a>
 
-            <a
-              href="https://gautam-portfolio-sigma.vercel.app/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.iconLink}
-              aria-label="Portfolio"
+            <a 
+              href="https://gautam-portfolio-sigma.vercel.app/" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className={styles.iconLink} 
+              aria-label="Portfolio Website"
             >
-              <svg
-                role="img"
-                viewBox="0 0 24 24"
-                width="30"
-                height="30"
-                fill="currentColor"
-                xmlns="http://www.w3.org/2000/svg"
-              >
+              {/* Portfolio SVG icon */}
+              <svg role="img" viewBox="0 0 24 24" width="30" height="30" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                 <title>Portfolio Website</title>
                 <path d="M10.5 2h3a.5.5 0 0 1 .5.5V4h3.5A2.5 2.5 0 0 1 20 
                   6.5v10A2.5 2.5 0 0 1 17.5 19h-11A2.5 2.5 0 0 1 4 
