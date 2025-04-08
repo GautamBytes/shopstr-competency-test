@@ -8,6 +8,30 @@ import styles from '../styles/Home.module.css';
 import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { docco } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
 
+// Define interfaces for our state objects
+interface NostrResult {
+  originalMessage?: string;
+  decryptedContent?: string;
+  error?: string;
+  [key: string]: any;
+}
+
+interface CashuResult {
+  message?: string;
+  error?: string;
+  [key: string]: any;
+}
+
+interface HodlResult {
+  originalInvoice?: { status: string };
+  heldInvoice?: { status: string };
+  settledInvoice?: { status: string };
+  failedSettlement?: { status: string };
+  canceledInvoice?: { status: string };
+  error?: string;
+  [key: string]: any;
+}
+
 const Home: NextPage = () => {
   // Sidebar toggle state
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -18,7 +42,7 @@ const Home: NextPage = () => {
   const toggleDarkMode = () => setDarkMode(!darkMode);
 
   // Nostr states
-  const [nostrResult, setNostrResult] = useState<any>(null);
+  const [nostrResult, setNostrResult] = useState<NostrResult | null>(null);
   const [nostrLoading, setNostrLoading] = useState(false);
   const [nostrVisible, setNostrVisible] = useState(false);
 
@@ -43,7 +67,7 @@ const Home: NextPage = () => {
   };
 
   // Cashu states
-  const [cashuResult, setCashuResult] = useState<any>(null);
+  const [cashuResult, setCashuResult] = useState<CashuResult | null>(null);
   const [cashuLoading, setCashuLoading] = useState(false);
   const [cashuVisible, setCashuVisible] = useState(false);
 
@@ -68,7 +92,7 @@ const Home: NextPage = () => {
   };
 
   // HODL states
-  const [hodlResult, setHodlResult] = useState<any>(null);
+  const [hodlResult, setHodlResult] = useState<HodlResult | null>(null);
   const [hodlLoading, setHodlLoading] = useState(false);
   const [hodlVisible, setHodlVisible] = useState(false);
 
@@ -306,11 +330,11 @@ const Home: NextPage = () => {
               <div className={`${styles.resultsContainer} ${styles.fadeIn}`}>
                 <h3>Invoice Statuses</h3>
                 <ul className={styles.statusList}>
-                  <li>Original: {hodlResult.originalInvoice.status}</li>
-                  <li>After Payment: {hodlResult.heldInvoice.status}</li>
-                  <li>After Settlement: {hodlResult.settledInvoice.status}</li>
-                  <li>With Wrong Preimage: {hodlResult.failedSettlement.status}</li>
-                  <li>After Cancellation: {hodlResult.canceledInvoice.status}</li>
+                  <li>Original: {hodlResult.originalInvoice?.status}</li>
+                  <li>After Payment: {hodlResult.heldInvoice?.status}</li>
+                  <li>After Settlement: {hodlResult.settledInvoice?.status}</li>
+                  <li>With Wrong Preimage: {hodlResult.failedSettlement?.status}</li>
+                  <li>After Cancellation: {hodlResult.canceledInvoice?.status}</li>
                 </ul>
                 <details>
                   <summary>Show Full Details</summary>
@@ -325,7 +349,7 @@ const Home: NextPage = () => {
 
         <footer className={styles.footer}>
           <p className={styles.footerText}>
-            © 2025 Gautam Manchandani | Built for the Shopstr Competency Test[SOB'25]
+            © 2025 Gautam Manchandani | Built for the Shopstr Competency Test[SOB&apos;25]
           </p>
           <div className={styles.footerLinks}>
             <a 
