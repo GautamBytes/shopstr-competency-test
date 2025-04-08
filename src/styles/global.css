@@ -1,7 +1,11 @@
-import type { AppProps } from 'next/app';
-
-function MyApp({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />;
-}
-
-export default MyApp;
+:root {
+    --primary: #f5576c;
+    --primary-light: #ff6b7a;
+    --secondary: #f093fb;
+    --bg-light: #fdfcfb;
+    --bg-accent: #e2d1c3;
+    --sidebar-light-1: #f8eee7;
+    --sidebar-light-2: #f3dfc9;
+    --text-dark: #333;
+    --text-muted: #555;
+  }
