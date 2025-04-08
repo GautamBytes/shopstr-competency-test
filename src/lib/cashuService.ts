@@ -5,15 +5,6 @@ import { bytesToHex, randomBytes } from '@noble/hashes/utils';
 
 const MINT_URL = 'https://testnut.cashu.space'; // Test mint URL
 
-// Define types for proofs
-interface Proof {
-  id: string;
-  amount: number;
-  secret: string;
-  C: string;
-  [key: string]: any; // Allow for additional properties
-}
-
 // Generate a new secp256k1 key pair and return the keys as hexadecimal strings.
 export function generateCashuKeys() {
   const privateKey = randomBytes(32);
@@ -25,7 +16,7 @@ export function generateCashuKeys() {
 }
 
 // Helper to simulate P2PK locking by adding a 'p2pk' field to each proof.
-function lockProofs(proofs: Proof[], pubkey: string) {
+function lockProofs(proofs: any[], pubkey: string) {
   return proofs.map((proof) => ({
     ...proof,
     p2pk: pubkey, // Indicates this proof is locked to the provided public key.
@@ -47,11 +38,15 @@ export async function createP2PkToken(amount: number, pubkey: string) {
     const proofs = await wallet.mintProofs(amount, quote);
     
     // Lock the proofs with the given public key.
-    const lockedProofs = lockProofs(proofs as Proof[], pubkey);
+    const lockedProofs = lockProofs(proofs, pubkey);
 
+    // Include the mint URL in the token object
     return {
       proofs: lockedProofs,
-      token: getEncodedToken({ proofs: lockedProofs }),
+      token: getEncodedToken({ 
+        proofs: lockedProofs,
+        mint: MINT_URL  // Add the mint URL to satisfy the Token type
+      }),
     };
   } catch (error) {
     console.error('Cashu error during issuance:', error);
